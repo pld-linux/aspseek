@@ -17,7 +17,7 @@ Patch0:		%{name}-types.patch
 Patch1:		%{name}-mysql4.patch
 URL:		http://www.aspseek.org/
 BuildRequires:	apache(EAPI)-devel
-BuildRequires:	openssl-devel
+BuildRequires:	openssl-devel >= 0.9.6m
 BuildRequires:	mysql-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	zlib-devel
