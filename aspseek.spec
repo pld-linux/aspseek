@@ -14,6 +14,7 @@ Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
 Source1:	%{name}-mod_aspseek.conf
 Source2:	%{name}.init
 Patch0:		%{name}-types.patch
+Patch1:		%{name}-mysql4.patch
 URL:		http://www.aspseek.org/
 BuildRequires:	apache(EAPI)-devel
 BuildRequires:	openssl-devel
@@ -107,7 +108,8 @@ Modu³ Apache ASPSeek.
 
 %prep
 %setup -q
-%patch -p1
+%patch0 -p1
+%patch1 -p1
 
 %build
 %configure2_13 \
