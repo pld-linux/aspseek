@@ -1,7 +1,7 @@
 # TODO:
 #	- split into indexer and client?
 #	- running indexer from cron?
-%define         apxs            /usr/sbin/apxs
+%define		apxs		/usr/sbin/apxs
 Summary:	Advanced Internet search engine
 Summary(pl):	Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
@@ -34,7 +34,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
 %define		_bindir		/home/httpd/cgi-bin
-%define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
+%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
 
 %description
 ASPSeek is an Internet search engine, written in C++ using the STL
