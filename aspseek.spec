@@ -107,7 +107,7 @@ Modu³ Apache ASPSeek.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc/httpd,/home/httpd/icons,rc.d/init.d}
+install -d $RPM_BUILD_ROOT{/etc/{httpd,rc.d/init.d},/home/httpd/icons}
 install -d $RPM_BUILD_ROOT/var/{spool/aspseek,log}
 
 %{__make} install \
