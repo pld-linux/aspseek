@@ -6,12 +6,13 @@ Summary:	Advanced Internet search engine
 Summary(pl):	Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
 Version:	1.2.8
-Release:	2
+Release:	3
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
 Source1:	%{name}-mod_aspseek.conf
 Source2:	%{name}.init
+Patch0:		%{name}-types.patch
 URL:		http://www.aspseek.org/
 BuildRequires:	apache(EAPI)-devel
 BuildRequires:	openssl-devel
@@ -103,6 +104,7 @@ Modu³ Apache ASPSeek.
 
 %prep
 %setup -q
+%patch -p1
 
 %build
 %configure2_13 \
@@ -205,6 +207,7 @@ fi
 %dir %{_sysconfdir}/sql
 %{_sysconfdir}/stopwords
 %{_sysconfdir}/tables
+%attr(754,root,root) /etc/rc.d/init.d/aspseek
 %attr(750,aspseek,root) %dir /var/spool/aspseek
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.conf
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.htm
