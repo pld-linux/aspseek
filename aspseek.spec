@@ -151,7 +151,8 @@ fi
 %post
 /sbin/ldconfig
 /sbin/chkconfig --add %{name}
-touch /var/log/aspseek.log && chown aspseek.root /var/log/aspseek.log
+touch /var/log/aspseek.log
+chown aspseek:root /var/log/aspseek.log
 
 %preun
 if [ "$1" = "0" ]; then
