@@ -1,0 +1,11 @@
+--- aspseek-1.2.8/src/mysql/mysqldb.cpp~	Mon Sep 15 15:24:39 2003
++++ aspseek-1.2.8/src/mysql/mysqldb.cpp	Mon Sep 15 15:24:39 2003
+@@ -388,7 +388,7 @@
+ 
+ char* CMySQLDatabase::DispError(void)
+ {
+-        char *str;
++        const char *str;
+ 	int len;
+         str = mysql_error(&m_my);
+ 	len = strlen(str);
