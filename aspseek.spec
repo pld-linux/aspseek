@@ -1,15 +1,16 @@
 # TODO:
 #	- split into indexer and client?
 #	- running indexer from cron?
-%define         apxs            /usr/sbin/apxs
+%define		apxs		/usr/sbin/apxs
 Summary:	Advanced Internet search engine
 Summary(pl):	Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
 Version:	1.2.8
-Release:	4
+Release:	5
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
+# Source0-md5:	0660b6b0d45d37c7a53c7e1c40cae002
 Source1:	%{name}-mod_aspseek.conf
 Source2:	%{name}.init
 Patch0:		%{name}-types.patch
@@ -33,7 +34,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
 %define		_bindir		/home/httpd/cgi-bin
-%define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
+%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
 
 %description
 ASPSeek is an Internet search engine, written in C++ using the STL
@@ -154,10 +155,10 @@ touch /var/log/aspseek.log && chown aspseek.root /var/log/aspseek.log
 
 %preun
 if [ "$1" = "0" ]; then
-        if [ -f /var/lock/subsys/%{name} ]; then
-                /etc/rc.d/init.d/%{name} stop 1>&2
-        fi
-        /sbin/chkconfig --del %{name}
+	if [ -f /var/lock/subsys/%{name} ]; then
+		/etc/rc.d/init.d/%{name} stop 1>&2
+	fi
+	/sbin/chkconfig --del %{name}
 fi
 
 %postun
@@ -175,21 +176,21 @@ echo "Remember to run %{_sbindir}/aspseek-mysql-postinstall."
 %post -n apache-mod_aspseek
 %{apxs} -e -a -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
 if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf; then
-        echo "Include /etc/httpd/mod_aspseek.conf" >> /etc/httpd/httpd.conf
+	echo "Include /etc/httpd/mod_aspseek.conf" >> /etc/httpd/httpd.conf
 fi
 if [ -f /var/lock/subsys/httpd ]; then
-        /etc/rc.d/init.d/httpd restart 1>&2
+	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
 %preun -n apache-mod_aspseek
 if [ "$1" = "0" ]; then
-        %{apxs} -e -A -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
-        grep -v "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf > \
-                /etc/httpd/httpd.conf.tmp
-        mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
-        if [ -f /var/lock/subsys/httpd ]; then
-                /etc/rc.d/init.d/httpd restart 1>&2
-        fi
+	%{apxs} -e -A -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
+	grep -v "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf > \
+		/etc/httpd/httpd.conf.tmp
+	mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
 fi
 
 %files
