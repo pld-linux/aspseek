@@ -6,20 +6,26 @@ Summary:	Advanced Internet search engine
 Summary(pl):	Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
 Version:	1.2.8
-Release:	1
+Release:	2
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
 Source1:	%{name}-mod_aspseek.conf
 Source2:	%{name}.init
 URL:		http://www.aspseek.org/
-Requires:	webserver
-Requires:	%{name}-db-%{version}
 BuildRequires:	apache(EAPI)-devel
 BuildRequires:	openssl-devel
 BuildRequires:	mysql-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	zlib-devel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
+Requires(post):	fileutils
+Requires(post,preun):	/sbin/chkconfig
+Requires(post,postun):	/sbin/ldconfig
+Requires(postun):	/usr/sbin/userdel
+Requires:	webserver
+Requires:	%{name}-db-%{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
@@ -69,6 +75,7 @@ Summary(pl):	Obs³uga MySQL dla ASPSeek
 Group:		Networking/Utilities
 Provides:	%{name}-db-%{version}
 Requires:	%{name} = %{version}
+Requires(post):	/sbin/ldconfig
 
 %description db-mysql
 This driver acts as a database backend for ASPSeek, so ASPSeek will
@@ -82,8 +89,10 @@ bêdzie zapisywa³ swoje dane w bazie MySQL.
 Summary:	Apache module: ASPSeek search engine
 Summary(pl):	Modu³ Apache: Silnik wyszukiwania ASPSeek
 Group:		Networking/Daemons
-Requires(post):	%{_sbindir}/apxs
 Requires(pre):	aspseek
+Requires(pre):	fileutils
+Requires(pre):	grep
+Requires(post,preun):	%{apxs}
 Requires:	apache(EAPI)
 
 %description -n apache-mod_aspseek
@@ -121,19 +130,17 @@ sed -e "s#/img/#/icons/#g" $RPM_BUILD_ROOT%{_sysconfdir}/s.htm-dist > \
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 touch $RPM_BUILD_ROOT/var/log/aspseek.log
 
-gzip -9nf AUTHOR* FAQ* NEWS* README* RELEASE* THANKS* TODO* doc/*.txt
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pre
 if [ -n "`id -u aspseek 2>/dev/null`" ]; then
 	if [ "`id -u aspseek`" != "50" ]; then
-	  echo "Warning: user aspseek haven't uid=50. Correct this before installing aspseek" 1>&2
-          exit 1
-        fi
+		echo "Error: user aspseek doesn't have uid=50. Correct this before installing aspseek." 1>&2
+		exit 1
+	fi
 else
-        /usr/sbin/useradd -u 50 -r -d /home/services/aspseek -s /bin/false -c "ASPSEEK User" -g root aspseek 1>&2
+	/usr/sbin/useradd -u 50 -r -d /home/services/aspseek -s /bin/false -c "ASPSEEK User" -g root aspseek 1>&2
 fi
 
 %post
@@ -152,12 +159,12 @@ fi
 %postun
 /sbin/ldconfig
 if [ "$1" = "0" ]; then
-        /usr/sbin/userdel aspseek
+	/usr/sbin/userdel aspseek
 fi
 
 %post db-mysql
 /sbin/ldconfig
-echo "Remember to run: %{_sbindir}/aspseek-mysql-postinstall"
+echo "Remember to run %{_sbindir}/aspseek-mysql-postinstall."
 
 %postun db-mysql -p /sbin/ldconfig
 
@@ -183,7 +190,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHOR* FAQ* NEWS* README.gz RELEASE* THANKS* TODO* doc/*.gz
+%doc AUTHOR* FAQ* NEWS* README* RELEASE* THANKS* TODO* doc/*.txt
 %attr(755,root,root) %{_bindir}/s.cgi
 %attr(755,root,root) %{_sbindir}/index
 %attr(755,root,root) %{_sbindir}/searchd
@@ -212,6 +219,6 @@ fi
 
 %files -n apache-mod_aspseek
 %defattr(644,root,root,755)
-%doc README.APACHE_MODULE.gz
+%doc README.APACHE_MODULE
 %attr(755,root,root) %{_pkglibdir}/*.so
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/mod_*.conf
