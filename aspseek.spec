@@ -162,7 +162,7 @@ echo "Remember to run: %{_sbindir}/aspseek-mysql-postinstall"
 %postun db-mysql -p /sbin/ldconfig
 
 %post -n apache-mod_aspseek
-%{_sbindir}/apxs -e -a -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
+%{apxs} -e -a -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
 if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf; then
         echo "Include /etc/httpd/mod_aspseek.conf" >> /etc/httpd/httpd.conf
 fi
@@ -172,7 +172,7 @@ fi
 
 %preun -n apache-mod_aspseek
 if [ "$1" = "0" ]; then
-        %{_sbindir}/apxs -e -A -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
+        %{apxs} -e -A -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
         grep -v "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf > \
                 /etc/httpd/httpd.conf.tmp
         mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
