@@ -102,6 +102,7 @@ Modu³ Apache ASPSeek.
 	--enable-apache-module \
 	--with-openssl \
 	--with-mysql \
+	--enable-unicode \
 	--localstatedir=/var/spool
 %{__make}
 
