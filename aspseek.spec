@@ -6,7 +6,7 @@ Summary:	Advanced Internet search engine
 Summary(pl):	Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
 Version:	1.2.8
-Release:	3
+Release:	4
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
@@ -27,6 +27,8 @@ Requires(post,postun):	/sbin/ldconfig
 Requires(postun):	/usr/sbin/userdel
 Requires:	webserver
 Requires:	%{name}-db-%{version}
+Obsoletes:	swish++
+Obsoletes:	mnogosearch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
