@@ -1,3 +1,7 @@
+# TODO:
+#	- split into indexer and client?
+#	- running indexer from cron?
+%define         apxs            /usr/sbin/apxs
 Summary:	Advanced Internet search engine
 Summary(pl):	Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
@@ -6,17 +10,21 @@ Release:	1
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
+Source1:	%{name}-mod_aspseek.conf
+Source2:	%{name}.init
 URL:		http://www.aspseek.org/
 Requires:	webserver
 Requires:	%{name}-db-%{version}
-BuildRequires:	apache-devel
+BuildRequires:	apache(EAPI)-devel
 BuildRequires:	openssl-devel
 BuildRequires:	mysql-devel
 BuildRequires:	libstdc++-devel
+BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
 %define		_bindir		/home/httpd/cgi-bin
+%define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
 
 %description
 ASPSeek is an Internet search engine, written in C++ using the STL
@@ -59,7 +67,7 @@ pod¶wietlanie wyszukiwanych s³ów.
 Summary:	MySQL backend driver for ASPSeek
 Summary(pl):	Obs³uga MySQL dla ASPSeek
 Group:		Networking/Utilities
-Provides:	%{name}-db-%{version}	
+Provides:	%{name}-db-%{version}
 Requires:	%{name} = %{version}
 
 %description db-mysql
@@ -70,17 +78,18 @@ store its data in MySQL database.
 Ten driver dzia³a jako bazodanowy backend dla ASPSeek, tak, ¿e ASPSeek
 bêdzie zapisywa³ swoje dane w bazie MySQL.
 
-%packane -n apache-mod_aspseek
+%package -n apache-mod_aspseek
 Summary:	Apache module: ASPSeek search engine
 Summary(pl):	Modu³ Apache: Silnik wyszukiwania ASPSeek
 Group:		Networking/Daemons
-Prereq:		/usr/sbin/apxs
-Requires:	apache
+Requires(post):	%{_sbindir}/apxs
+Requires(pre):	aspseek
+Requires:	apache(EAPI)
 
 %description -n apache-mod_aspseek
 ASPSeek Apache module.
 
-%description apache-mod_aspseek -l pl
+%description -n apache-mod_aspseek -l pl
 Modu³ Apache ASPSeek.
 
 %prep
@@ -92,39 +101,80 @@ Modu³ Apache ASPSeek.
 	--enable-font-size \
 	--enable-apache-module \
 	--with-openssl \
-	--with-mysql
+	--with-mysql \
+	--localstatedir=/var/spool
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT{/etc/httpd,/home/httpd/icons,rc.d/init.d}
+install -d $RPM_BUILD_ROOT/var/{spool/aspseek,log}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-gzip -9nf AUTHOR* FAQ* NEWS* README.gz RELEASE* THANKS* TODO* doc/*.txt
+mv -f $RPM_BUILD_ROOT%{_sysconfdir}/img/* $RPM_BUILD_ROOT/home/httpd/icons
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/httpd/mod_aspseek.conf
+sed -e "s#/img/#/icons/#g" $RPM_BUILD_ROOT%{_sysconfdir}/s.htm-dist > \
+	$RPM_BUILD_ROOT%{_sysconfdir}/s.htm
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+touch $RPM_BUILD_ROOT/var/log/aspseek.log
+
+gzip -9nf AUTHOR* FAQ* NEWS* README* RELEASE* THANKS* TODO* doc/*.txt
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-exit1
-adding users missing
+if [ -n "`id -u aspseek 2>/dev/null`" ]; then
+	if [ "`id -u aspseek`" != "50" ]; then
+	  echo "Warning: user aspseek haven't uid=50. Correct this before installing aspseek" 1>&2
+          exit 1
+        fi
+else
+        /usr/sbin/useradd -u 50 -r -d /home/services/aspseek -s /bin/false -c "ASPSEEK User" -g root aspseek 1>&2
+fi
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+/sbin/chkconfig --add httpd
+touch /var/log/aspseek.log && chown aspseek.root /var/log/aspseek.log
 
-#%post db-mysql
-#%{sbindir}/aspseek-mysql-postinstall
+%preun
+if [ "$1" = "0" ]; then
+        if [ -f /var/lock/subsys/%{name} ]; then
+                /etc/rc.d/init.d/%{name} stop 1>&2
+        fi
+        /sbin/chkconfig --del %{name}
+fi
+
+%postun
+/sbin/ldconfig
+if [ "$1" = "0" ]; then
+        /usr/sbin/userdel aspseek
+fi
+
+%post db-mysql
+/sbin/ldconfig
+echo "Remember to run: %{_sbindir}/aspseek-mysql-postinstall"
+
+%postun db-mysql -p /sbin/ldconfig
 
 %post -n apache-mod_aspseek
+%{_sbindir}/apxs -e -a -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
+if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf; then
+        echo "Include /etc/httpd/mod_aspseek.conf" >> /etc/httpd/httpd.conf
+fi
 if [ -f /var/lock/subsys/httpd ]; then
         /etc/rc.d/init.d/httpd restart 1>&2
-else
-        echo "Run \"/etc/rc.d/init.d/httpd start\" to start apache http daemon."
 fi
 
 %preun -n apache-mod_aspseek
 if [ "$1" = "0" ]; then
+        %{_sbindir}/apxs -e -A -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
+        grep -v "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf > \
+                /etc/httpd/httpd.conf.tmp
+        mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
         if [ -f /var/lock/subsys/httpd ]; then
                 /etc/rc.d/init.d/httpd restart 1>&2
         fi
@@ -134,23 +184,33 @@ fi
 %defattr(644,root,root,755)
 %doc AUTHOR* FAQ* NEWS* README.gz RELEASE* THANKS* TODO* doc/*.gz
 %attr(755,root,root) %{_bindir}/s.cgi
-%attr(755,root,root) %{sbindir}/index 
-%attr(755,root,root) %{sbindir}/searchd
-%attr(755,root,root) %{_libdir}/libaspseek*.so
+%attr(755,root,root) %{_sbindir}/index
+%attr(755,root,root) %{_sbindir}/searchd
+%attr(755,root,root) %{_libdir}/libaspseek*.so.*
+/home/httpd/icons/*.*
 %{_mandir}/man5/aspseek.conf*
 %{_mandir}/man5/s*
 %{_mandir}/man1/*
 %{_mandir}/man7/*
-# CONFIGS
+%dir %{_sysconfdir}
+%{_sysconfdir}/langmap
+%dir %{_sysconfdir}/sql
+%{_sysconfdir}/stopwords
+%{_sysconfdir}/tables
+%attr(750,aspseek,root) %dir /var/spool/aspseek
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.conf
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.htm
+%ghost /var/log/aspseek.log
 
 %files db-mysql
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/aspseek-mysql-postinstall
-%attr(755,root,root) %{_libdir}/libmysql*.so
-%{sysconfdir}/sql/mysql
+%attr(755,root,root) %{_libdir}/libmysql*.so*
+%{_sysconfdir}/sql/mysql
 %{_mandir}/man5/aspseek-sql*
 
 %files -n apache-mod_aspseek
 %defattr(644,root,root,755)
 %doc README.APACHE_MODULE.gz
-%attr(755,root,root) %{_libdir}/apache/*.so
+%attr(755,root,root) %{_pkglibdir}/*.so
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/mod_*.conf
