@@ -6,7 +6,7 @@ Summary:	Advanced Internet search engine
 Summary(pl):	Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
 Version:	1.2.8
-Release:	6
+Release:	7
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
@@ -145,7 +145,7 @@ if [ -n "`id -u aspseek 2>/dev/null`" ]; then
 		exit 1
 	fi
 else
-	/usr/sbin/useradd -u 50 -r -d /home/services/aspseek -s /bin/false -c "ASPSEEK User" -g root aspseek 1>&2
+	/usr/sbin/useradd -u 50 -r -d /srv/aspseek -s /bin/false -c "ASPSEEK User" -g root aspseek 1>&2
 fi
 
 %post
