@@ -15,7 +15,7 @@ Source2:	%{name}.init
 Patch0:		%{name}-types.patch
 URL:		http://www.aspseek.org/
 BuildRequires:	apache(EAPI)-devel
-BuildRequires:	openssl-devel
+BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	mysql-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	zlib-devel
