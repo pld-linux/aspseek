@@ -20,9 +20,9 @@ BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	mysql-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	zlib-devel
-Requires(pre): /bin/id
-Requires(pre): /usr/sbin/useradd
-Requires(postun):      /usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
+Requires(postun):	/usr/sbin/userdel
 Requires(post):	fileutils
 Requires(post,preun):	/sbin/chkconfig
 Requires(post,postun):	/sbin/ldconfig
@@ -140,12 +140,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre
 if [ -n "`id -u aspseek 2>/dev/null`" ]; then
-       if [ "`id -u aspseek`" != "50" ]; then
-               echo "Error: user aspseek doesn't have uid=50. Correct this before installing aspseek." 1>&2
-               exit 1
-       fi
+	if [ "`id -u aspseek`" != "50" ]; then
+		echo "Error: user aspseek doesn't have uid=50. Correct this before installing aspseek." 1>&2
+		exit 1
+	fi
 else
-       /usr/sbin/useradd -u 50 -r -d /home/services/aspseek -s /bin/false -c "ASPSEEK User" -g root aspseek 1>&2
+	/usr/sbin/useradd -u 50 -r -d /home/services/aspseek -s /bin/false -c "ASPSEEK User" -g root aspseek 1>&2
 fi
 
 %post
@@ -156,16 +156,16 @@ chown aspseek:root /var/log/aspseek.log
 
 %preun
 if [ "$1" = "0" ]; then
-        if [ -f /var/lock/subsys/%{name} ]; then
-                /etc/rc.d/init.d/%{name} stop 1>&2
-        fi
-        /sbin/chkconfig --del %{name}
+	if [ -f /var/lock/subsys/%{name} ]; then
+		/etc/rc.d/init.d/%{name} stop 1>&2
+	fi
+	/sbin/chkconfig --del %{name}
 fi
 
 %postun
 /sbin/ldconfig
 if [ "$1" = "0" ]; then
-       /usr/sbin/userdel aspseek
+	/usr/sbin/userdel aspseek
 fi
 
 %post db-mysql
