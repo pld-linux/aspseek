@@ -6,7 +6,7 @@ Summary:	Advanced Internet search engine
 Summary(pl):	Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
 Version:	1.2.8
-Release:	4
+Release:	6
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
