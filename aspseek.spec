@@ -92,10 +92,10 @@ bêdzie zapisywa³ swoje dane w bazie MySQL.
 Summary:	Apache module: ASPSeek search engine
 Summary(pl):	Modu³ Apache: Silnik wyszukiwania ASPSeek
 Group:		Networking/Daemons
-Requires(pre):	aspseek
-Requires(pre):	fileutils
-Requires(pre):	grep
+PreReq:		aspseek
 Requires(post,preun):	%{apxs}
+Requires(post,preun):	grep
+Requires(preun):	fileutils
 Requires:	apache(EAPI)
 
 %description -n apache-mod_aspseek
@@ -175,21 +175,22 @@ echo "Remember to run %{_sbindir}/aspseek-mysql-postinstall."
 %post -n apache-mod_aspseek
 %{apxs} -e -a -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
 if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf; then
-        echo "Include /etc/httpd/mod_aspseek.conf" >> /etc/httpd/httpd.conf
+	echo "Include /etc/httpd/mod_aspseek.conf" >> /etc/httpd/httpd.conf
 fi
 if [ -f /var/lock/subsys/httpd ]; then
-        /etc/rc.d/init.d/httpd restart 1>&2
+	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
 %preun -n apache-mod_aspseek
 if [ "$1" = "0" ]; then
-        %{apxs} -e -A -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
-        grep -v "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf > \
-                /etc/httpd/httpd.conf.tmp
-        mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
-        if [ -f /var/lock/subsys/httpd ]; then
-                /etc/rc.d/init.d/httpd restart 1>&2
-        fi
+	%{apxs} -e -A -n aspseek %{_pkglibdir}/mod_aspseek.so 1>&2
+	umask 027
+	grep -v "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf > \
+		/etc/httpd/httpd.conf.tmp
+	mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
 fi
 
 %files
