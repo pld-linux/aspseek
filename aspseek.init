@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# aspseek	Aspseek Internet Search Engine
+#
+# chkconfig:	345 75 25
+# description:	Advanced Internet search engine
+# processname:	searchd
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+# Get service config
+[ -f /etc/sysconfig/aspseek ] && . /etc/sysconfig/aspseek
+
+# See how we were called.
+case "$1" in
+  start)
+	# Check if the service is already running?
+        if [ ! -f /var/lock/subsys/aspseek ]; then
+		msg_starting "aspseek searchd"
+		daemon --user aspseek /usr/sbin/searchd -D -l /var/log/aspseek.log
+	        RETVAL=$?
+    		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/aspseek
+	else
+        	msg_already_running "aspseek searchd"
+	        exit 1
+	fi
+	;;
+  stop)
+        # Stop daemons.
+	if [ -f /var/lock/subsys/aspseek ]; then
+                msg_stopping "aspseek searchd"
+                killproc /usr/sbin/searchd
+                rm -f /var/lock/subsys/aspseek
+        else
+		msg_not_running "aspseek searchd"
+	        exit 1
+	fi
+	;;
+  status)
+	status aspseek
+	exit $?
+	;;
+  restart|reload)
+	$0 stop
+	$0 start
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|status}"
+	exit 1
+	;;
+esac
+
+exit $RETVAL
