@@ -147,7 +147,7 @@ fi
 
 %post
 /sbin/ldconfig
-/sbin/chkconfig --add httpd
+/sbin/chkconfig --add %{name}
 touch /var/log/aspseek.log && chown aspseek.root /var/log/aspseek.log
 
 %preun
