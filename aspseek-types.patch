@@ -1,0 +1,12 @@
+--- aspseek-1.2.8/src/sqldbi.cpp.orig	Mon Feb  4 10:11:12 2002
++++ aspseek-1.2.8/src/sqldbi.cpp	Wed Aug 28 15:01:59 2002
+@@ -1844,7 +1844,8 @@
+ 		while (answ && answ->FetchRow())
+ 		{
+ 			BYTE* content;
+-			ULONG urlid, wordCount, uLen;
++			ULONG urlid, wordCount;
++			unsigned long int uLen;
+ 		        char content_type[50];
+ 		        string charset_db;
+ 			int size, charset_gid;
