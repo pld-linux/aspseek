@@ -10,6 +10,7 @@ Release:	4
 License:	GPL
 Group:		Networking/Utilities
 Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
+# Source0-md5:	0660b6b0d45d37c7a53c7e1c40cae002
 Source1:	%{name}-mod_aspseek.conf
 Source2:	%{name}.init
 Patch0:		%{name}-types.patch
