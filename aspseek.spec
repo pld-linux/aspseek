@@ -5,21 +5,6 @@ Version:	1.2.8
 Release:	1
 License:	GPL
 Group:		Networking/Utilities
-Group(cs):	Sí»ové/Utility
-Group(da):	Netværks/Værktøj
-Group(de):	Netzwerkwesen/Dienstprogramme
-Group(es):	Red/Utilitarios
-Group(fr):	Réseau/Utilitaires
-Group(is):	Net/Tól
-Group(it):	Rete/Utility
-Group(no):	Nettverks/Verktøy
-Group(pl):	Sieciowe/Narzêdzia
-Group(pt_BR):	Rede/Utilitários
-Group(pt):	Rede/Utilidades
-Group(ru):	óÅÔØ/õÔÉÌÉÔÙ
-Group(sl):	Omre¾ni/Pripomoèki
-Group(sv):	Nätverk/Verktyg
-Group(uk):	íÅÒÅÖÁ/õÔÉÌ¦ÔÉ
 Source0:	http://www.aspseek.org/pkg/src/1.2.8/%{name}-%{version}.tar.gz
 URL:		http://www.aspseek.org/
 Requires:	webserver
@@ -74,21 +59,6 @@ pod¶wietlanie wyszukiwanych s³ów.
 Summary:	MySQL backend driver for ASPSeek
 Summary(pl):	Obs³uga MySQL dla ASPSeek
 Group:		Networking/Utilities
-Group(cs):	Sí»ové/Utility
-Group(da):	Netværks/Værktøj
-Group(de):	Netzwerkwesen/Dienstprogramme
-Group(es):	Red/Utilitarios
-Group(fr):	Réseau/Utilitaires
-Group(is):	Net/Tól
-Group(it):	Rete/Utility
-Group(no):	Nettverks/Verktøy
-Group(pl):	Sieciowe/Narzêdzia
-Group(pt_BR):	Rede/Utilitários
-Group(pt):	Rede/Utilidades
-Group(ru):	óÅÔØ/õÔÉÌÉÔÙ
-Group(sl):	Omre¾ni/Pripomoèki
-Group(sv):	Nätverk/Verktyg
-Group(uk):	íÅÒÅÖÁ/õÔÉÌ¦ÔÉ
 Provides:	%{name}-db-%{version}	
 Requires:	%{name} = %{version}
 
@@ -104,20 +74,6 @@ bêdzie zapisywa³ swoje dane w bazie MySQL.
 Summary:	Apache module: ASPSeek search engine
 Summary(pl):	Modu³ Apache: Silnik wyszukiwania ASPSeek
 Group:		Networking/Daemons
-Group(cs):	Sí»ové/Démoni
-Group(da):	Netværks/Dæmoner
-Group(de):	Netzwerkwesen/Server
-Group(es):	Red/Servidores
-Group(fr):	Réseau/Serveurs
-Group(is):	Net/Púkar
-Group(it):	Rete/Demoni
-Group(no):	Nettverks/Daemoner
-Group(pl):	Sieciowe/Serwery
-Group(pt):	Rede/Servidores
-Group(ru):	óÅÔØ/äÅÍÏÎÙ
-Group(sl):	Omre¾ni/Stre¾niki
-Group(sv):	Nätverk/Demoner
-Group(uk):	íÅÒÅÖÁ/äÅÍÏÎÉ
 Prereq:		/usr/sbin/apxs
 Requires:	apache
 
