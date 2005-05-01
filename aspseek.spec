@@ -19,7 +19,7 @@ BuildRequires:	apache(EAPI)-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	mysql-devel
 BuildRequires:	openssl-devel >= 0.9.7d
-BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	rpmbuild(macros) >= 1.202
 BuildRequires:	zlib-devel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/sbin/useradd
@@ -141,14 +141,7 @@ touch $RPM_BUILD_ROOT/var/log/aspseek.log
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-if [ -n "`/bin/id -u aspseek 2>/dev/null`" ]; then
-	if [ "`/bin/id -u aspseek`" != 50 ]; then
-		echo "Error: user aspseek doesn't have uid=50. Correct this before installing aspseek." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/useradd -u 50 -d /srv/aspseek -s /bin/false -c "ASPSEEK User" -g root aspseek 1>&2
-fi
+%useradd -u 50 -d /srv/aspseek -s /bin/false -c "ASPSEEK User" -g root aspseek
 
 %post
 /sbin/ldconfig
