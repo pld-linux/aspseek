@@ -216,8 +216,8 @@ fi
 %{_sysconfdir}/tables
 %attr(754,root,root) /etc/rc.d/init.d/aspseek
 %attr(750,aspseek,root) %dir /var/spool/aspseek
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.conf
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/*.htm
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.htm
 %ghost /var/log/aspseek.log
 
 %files db-mysql
@@ -231,4 +231,4 @@ fi
 %defattr(644,root,root,755)
 %doc README.APACHE_MODULE
 %attr(755,root,root) %{_pkglibdir}/*.so
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/httpd/mod_*.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/httpd/mod_*.conf
