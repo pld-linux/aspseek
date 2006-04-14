@@ -19,24 +19,24 @@ BuildRequires:	apache(EAPI)-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	mysql-devel
 BuildRequires:	openssl-devel >= 0.9.7d
-BuildRequires:	rpmbuild(macros) >= 1.202
+BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	zlib-devel
+Requires(post):	fileutils
+Requires(post,postun):	/sbin/ldconfig
+Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/sbin/useradd
-Requires(postun):	/usr/sbin/userdel
-Requires(post):	fileutils
-Requires(post,preun):	/sbin/chkconfig
-Requires(post,postun):	/sbin/ldconfig
-Requires:	webserver
 Requires:	%{name}-db-%{version}
+Requires:	webserver
 Provides:	user(aspseek)
-Obsoletes:	swish++
 Obsoletes:	mnogosearch
+Obsoletes:	swish++
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
 %define		_bindir		/home/httpd/cgi-bin
-%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
+%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR 2>/dev/null)
 
 %description
 ASPSeek is an Internet search engine, written in C++ using the STL
@@ -79,9 +79,9 @@ pod¶wietlanie wyszukiwanych s³ów.
 Summary:	MySQL backend driver for ASPSeek
 Summary(pl):	Obs³uga MySQL dla ASPSeek
 Group:		Networking/Utilities
-Provides:	%{name}-db-%{version}
-Requires:	%{name} = %{version}
 Requires(post):	/sbin/ldconfig
+Requires:	%{name} = %{version}
+Provides:	%{name}-db-%{version}
 
 %description db-mysql
 This driver acts as a database backend for ASPSeek, so ASPSeek will
@@ -95,11 +95,11 @@ bêdzie zapisywa³ swoje dane w bazie MySQL.
 Summary:	Apache module: ASPSeek search engine
 Summary(pl):	Modu³ Apache: Silnik wyszukiwania ASPSeek
 Group:		Networking/Daemons
-PreReq:		aspseek
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	grep
 Requires(preun):	fileutils
 Requires:	apache(EAPI)
+Requires:	aspseek
 
 %description -n apache-mod_aspseek
 ASPSeek Apache module.
@@ -158,9 +158,7 @@ fi
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/%{name} ]; then
-		/etc/rc.d/init.d/%{name} stop 1>&2
-	fi
+	%service %{name} stop
 	/sbin/chkconfig --del %{name}
 fi
 
@@ -181,9 +179,7 @@ echo "Remember to run %{_sbindir}/aspseek-mysql-postinstall."
 if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf; then
 	echo "Include /etc/httpd/mod_aspseek.conf" >> /etc/httpd/httpd.conf
 fi
-if [ -f /var/lock/subsys/httpd ]; then
-	/etc/rc.d/init.d/httpd restart 1>&2
-fi
+%service -q httpd restart
 
 %preun -n apache-mod_aspseek
 if [ "$1" = "0" ]; then
@@ -192,9 +188,7 @@ if [ "$1" = "0" ]; then
 	grep -v "^Include.*mod_aspseek.conf" /etc/httpd/httpd.conf > \
 		/etc/httpd/httpd.conf.tmp
 	mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
+	%service -q httpd restart
 fi
 
 %files
