@@ -80,7 +80,7 @@ Summary:	MySQL backend driver for ASPSeek
 Summary(pl):	Obs³uga MySQL dla ASPSeek
 Group:		Networking/Utilities
 Requires(post):	/sbin/ldconfig
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 Provides:	%{name}-db-%{version}
 
 %description db-mysql
