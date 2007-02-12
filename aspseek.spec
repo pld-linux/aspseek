@@ -3,7 +3,7 @@
 #	- running indexer from cron?
 %define		apxs		/usr/sbin/apxs
 Summary:	Advanced Internet search engine
-Summary(pl.UTF-8):   Silnik zaawansowanej wyszukiwarki Internetowej
+Summary(pl.UTF-8):	Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
 Version:	1.2.8
 Release:	7
@@ -77,7 +77,7 @@ podświetlanie wyszukiwanych słów.
 
 %package db-mysql
 Summary:	MySQL backend driver for ASPSeek
-Summary(pl.UTF-8):   Obsługa MySQL dla ASPSeek
+Summary(pl.UTF-8):	Obsługa MySQL dla ASPSeek
 Group:		Networking/Utilities
 Requires(post):	/sbin/ldconfig
 Requires:	%{name} = %{version}-%{release}
@@ -93,7 +93,7 @@ będzie zapisywał swoje dane w bazie MySQL.
 
 %package -n apache-mod_aspseek
 Summary:	Apache module: ASPSeek search engine
-Summary(pl.UTF-8):   Moduł Apache: Silnik wyszukiwania ASPSeek
+Summary(pl.UTF-8):	Moduł Apache: Silnik wyszukiwania ASPSeek
 Group:		Networking/Daemons
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	grep
