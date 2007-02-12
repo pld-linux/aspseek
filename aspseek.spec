@@ -3,7 +3,7 @@
 #	- running indexer from cron?
 %define		apxs		/usr/sbin/apxs
 Summary:	Advanced Internet search engine
-Summary(pl):	Silnik zaawansowanej wyszukiwarki Internetowej
+Summary(pl.UTF-8):   Silnik zaawansowanej wyszukiwarki Internetowej
 Name:		aspseek
 Version:	1.2.8
 Release:	7
@@ -55,29 +55,29 @@ Chinese) due to Unicode storage mode. Other features include stopwords
 and ispell support, a charset and language guesser, HTML templates for
 search results, excerpts, and query words highlighting.
 
-%description -l pl
+%description -l pl.UTF-8
 ASPSeek jest silnikiem wyszukiwarki Internetowej, napisany w C++ z
-u¿yciem biblioteki STL. Zawiera robota indeksuj±cego, daemon
-wyszukuj±cy oraz interfejs w postaci skryptu CGI. ASPSeek mo¿e
-indeksowaæ miliony adresów oraz wyszukiwaæ s³owa oraz zwroty, u¿ywaæ
-znaków globalnych jak równie¿ stosowaæ operatory logiczne. Rezultaty
-wyszukiwania mog± byæ ograniczane do okre¶lonego okresu czasu,
-serwera, zbioru serwerów oraz sortowane wg. aktualno¶ci (okre¶lane za
-pomoc± pewnych specjalnych technik) lub daty.
+uÅ¼yciem biblioteki STL. Zawiera robota indeksujÄ…cego, daemon
+wyszukujÄ…cy oraz interfejs w postaci skryptu CGI. ASPSeek moÅ¼e
+indeksowaÄ‡ miliony adresÃ³w oraz wyszukiwaÄ‡ sÅ‚owa oraz zwroty, uÅ¼ywaÄ‡
+znakÃ³w globalnych jak rÃ³wnieÅ¼ stosowaÄ‡ operatory logiczne. Rezultaty
+wyszukiwania mogÄ… byÄ‡ ograniczane do okreÅ›lonego okresu czasu,
+serwera, zbioru serwerÃ³w oraz sortowane wg. aktualnoÅ›ci (okreÅ›lane za
+pomocÄ… pewnych specjalnych technik) lub daty.
 
-ASPSeek jest zoptymalizowany dla wielu serwerów (w±tkowane
-indeksowanie, asynchroniczne zapytania DNS, grupowanie rezultatów wg
-serwera, grupy serwerów), ale mo¿e byæ równie¿ u¿ywany do obs³ugi
-jednego serwera. ASPSeek mo¿e pracowaæ z wieloma jêzykami/kodowaniami
-równocze¶nie (w³±czaj±c w to wielobajtowe kodowania u¿ywane np. dla
-jêzyka Chiñskiego) dziêki trybowi zapisu w Unikodzie. Inne mo¿liwo¶ci
-to blokowanie okre¶lonych s³ów, wsparcie dla ispella, zgadywarka
-kodowania oraz jêzyka, wzorce HTML dla rezultatów wyszukiwania,
-pod¶wietlanie wyszukiwanych s³ów.
+ASPSeek jest zoptymalizowany dla wielu serwerÃ³w (wÄ…tkowane
+indeksowanie, asynchroniczne zapytania DNS, grupowanie rezultatÃ³w wg
+serwera, grupy serwerÃ³w), ale moÅ¼e byÄ‡ rÃ³wnieÅ¼ uÅ¼ywany do obsÅ‚ugi
+jednego serwera. ASPSeek moÅ¼e pracowaÄ‡ z wieloma jÄ™zykami/kodowaniami
+rÃ³wnoczeÅ›nie (wÅ‚Ä…czajÄ…c w to wielobajtowe kodowania uÅ¼ywane np. dla
+jÄ™zyka ChiÅ„skiego) dziÄ™ki trybowi zapisu w Unikodzie. Inne moÅ¼liwoÅ›ci
+to blokowanie okreÅ›lonych sÅ‚Ã³w, wsparcie dla ispella, zgadywarka
+kodowania oraz jÄ™zyka, wzorce HTML dla rezultatÃ³w wyszukiwania,
+podÅ›wietlanie wyszukiwanych sÅ‚Ã³w.
 
 %package db-mysql
 Summary:	MySQL backend driver for ASPSeek
-Summary(pl):	Obs³uga MySQL dla ASPSeek
+Summary(pl.UTF-8):   ObsÅ‚uga MySQL dla ASPSeek
 Group:		Networking/Utilities
 Requires(post):	/sbin/ldconfig
 Requires:	%{name} = %{version}-%{release}
@@ -87,13 +87,13 @@ Provides:	%{name}-db-%{version}
 This driver acts as a database backend for ASPSeek, so ASPSeek will
 store its data in MySQL database.
 
-%description db-mysql -l pl
-Ten driver dzia³a jako bazodanowy backend dla ASPSeek, tak, ¿e ASPSeek
-bêdzie zapisywa³ swoje dane w bazie MySQL.
+%description db-mysql -l pl.UTF-8
+Ten driver dziaÅ‚a jako bazodanowy backend dla ASPSeek, tak, Å¼e ASPSeek
+bÄ™dzie zapisywaÅ‚ swoje dane w bazie MySQL.
 
 %package -n apache-mod_aspseek
 Summary:	Apache module: ASPSeek search engine
-Summary(pl):	Modu³ Apache: Silnik wyszukiwania ASPSeek
+Summary(pl.UTF-8):   ModuÅ‚ Apache: Silnik wyszukiwania ASPSeek
 Group:		Networking/Daemons
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	grep
@@ -104,8 +104,8 @@ Requires:	aspseek
 %description -n apache-mod_aspseek
 ASPSeek Apache module.
 
-%description -n apache-mod_aspseek -l pl
-Modu³ Apache ASPSeek.
+%description -n apache-mod_aspseek -l pl.UTF-8
+ModuÅ‚ Apache ASPSeek.
 
 %prep
 %setup -q
